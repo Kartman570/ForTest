@@ -12,15 +12,17 @@ x-db-config: &db-config
   DATABASE_PORT: 5432
   POSTGRES_PASSWORD: postgres
 
+x-common-config: &common-config
+  <<: *app-config
+  <<: *db-config
+
 services:
   api:
     image: userapp_api
     build:
       context: .
       target: base
-    environment:
-      <<: *app-config
-      <<: *db-config
+    environment: *common-config
     depends_on:
       - db
     ports:
