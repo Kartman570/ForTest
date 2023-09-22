@@ -12,24 +12,20 @@ x-db-config: &db-config
   DATABASE_PORT: 5432
   POSTGRES_PASSWORD: postgres
 
-x-common-config: &common-config
-  <<: *app-config
-  <<: *db-config
 
 services:
   api:
     image: userapp_api
     build:
       context: .
-      target: base
-    environment: *common-config
+    environment:
+      <<: [*app-config, *db-config]
     depends_on:
       - db
     ports:
       - "8000:8000"
     stdin_open: true
     tty: true
-
   db:
     image: postgres:12.5-alpine
     environment: *db-config
@@ -37,6 +33,5 @@ services:
       driver: none
     ports:
       - "5432:5432"
-
 volumes:
   sqlvolume:
